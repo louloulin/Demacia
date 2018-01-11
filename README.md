@@ -1,5 +1,5 @@
 # Demacia
-##12306抢票助手
+## 12306抢票助手
 * 1.使用的python3
 * 2.需要有chrome浏览器或者其他的浏览器
 * 3.需要下载chromedriver驱动,下载[链接](http://npm.taobao.org/mirrors/chromedriver/)
