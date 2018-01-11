@@ -126,6 +126,7 @@ class Ticket:
         self.qiang_piao()
 
 
+
 if __name__ == '__main__':
     ticket = Ticket()
     ticket.start()
