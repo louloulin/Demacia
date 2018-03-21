@@ -1,0 +1,44 @@
+ JsonArray jsonRow = new JsonArray();
+            for (int colIdx = first; colIdx < last; colIdx++) {
+                Cell cell = row.getCell(colIdx);
+                if (cell != null) {
+                    Object value = XDDFChartUtils.getCellValue(cell);
+                    Pair<Integer, Integer> key = Pair.of(rowIdx, colIdx);
+                    JsonObject jsonCell = new JsonObject();
+                    jsonCell.addProperty("text", value.toString());
+                    jsonCell.addProperty("row", rowIdx);
+                    jsonCell.addProperty("column", colIdx);
+                    CellRangeAddress m = merged.getOrDefault(key, null);
+                    if (m != null) {
+                        int r = m.getLastRow();
+                        int c = m.getLastColumn();
+                        jsonCell.addProperty("rowSpan", r - rowIdx + 1);
+                        jsonCell.addProperty("colSpan", c - colIdx + 1);
+                    }
+                    jsonRow.add(jsonCell);
+                }
+            }
+            if (jsonRow.size() > 0) {
+                jsonTable.add(jsonRow);
+            }
+        }
+
+        if (jsonTable.size() == 0) {
+            return;
+        }
+
+        // correct the index
+        logger.info("table");
+        final int minCol = minColx;
+        int minRow = jsonTable.get(0).getAsJsonArray().get(0).getAsJsonObject().get("row").getAsInt();
+        jsonTable.forEach((row) -> {
+            row.getAsJsonArray().forEach(cell -> {
+                JsonObject jsonObject = cell.getAsJsonObject();
+                int r = jsonObject.get("row").getAsInt();
+                int c = jsonObject.get("column").getAsInt();
+                jsonObject.addProperty("row", r - minRow);
+                jsonObject.addProperty("column", c - minCol);
+                logger.info("{}", jsonObject);
+            });
+            logger.info("");
+        });
